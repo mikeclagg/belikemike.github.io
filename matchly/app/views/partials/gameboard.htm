@@ -1,0 +1,7 @@
+<section class="text-center"
+   data-ng-class="$root.currentLevel.label">
+  <div data-ng-repeat="row in $root.grid" class="centered">
+    <gamepiece data-ng-repeat="cell in row" id="cell-{{$index}}__{{$parent.$index}}"></gamepiece>
+    <span class="clearfix"></span>
+  </div>
+</section>
