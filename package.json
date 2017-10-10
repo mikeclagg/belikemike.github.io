@@ -1,0 +1,16 @@
+{
+  "name": "matchly",
+  "version": "0.1.0",
+  "description": "Coding challenge game",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "npm start",
+    "start": "lite-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mike Clagg <mikeclagg@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "lite-server": "^2.3.0"
+  }
+}

@@ -1,0 +1,7 @@
+<header class="navbar-inverse navbar-header navbar-fixed-top clearfix">
+  <h2 class="navbar-brand font-primary pull-left">Matchly</h2>
+  <div class="pull-right difficulty font-secondary">Difficulty:
+    <select data-ng-model="hc.pc.PlayService.currentLevel" ng-change="hc.pc.PlayService.changeLevel()"
+      data-ng-options="option.label for option in hc.pc.PlayService.levels" class="text-capitalize"></select>
+  </div>
+</header>

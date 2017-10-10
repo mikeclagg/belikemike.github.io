@@ -45,6 +45,10 @@
   font-size: 1.5em;
 }
 
+.difficulty select {
+  background: #333;
+}
+
 .font-primary {
   font-family: 'Rubik', sans-serif !important;
   font-weight: 700;
@@ -52,6 +56,8 @@
 }
 .gameboard {
   margin: auto;
+  display: flex;
+  flex-direction: column;
 }
 .game-piece {
   padding: 0;
@@ -73,7 +79,7 @@
   width: 100%;
   height: 100%;
 }
-.cell.active {
+.active .cell {
   background: aqua;
   opacity: 0.5;
 }
@@ -92,10 +98,10 @@
   z-index: 1000;
   padding: 20px 0;
 }
-#loser {
+.loser {
   background: #ff63ca;
 }
-#winner {
+.winner {
   background: #92f5ff;
 }
 .play-button {
