@@ -1,38 +1,332 @@
-<!DOCTYPE html>
 <html>
-  <head>
-    <title>Matchly - Simple Coding Exercise</title>
+	<head>
+		<base href="/">
+		<title>Interview Sandbox</title>
+		<meta name="fragment" content="!">
+		<link href="https://fonts.googleapis.com/css?family=Rock+Salt" rel="stylesheet">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" />
+		<link rel="stylesheet" type="text/css" href="./assets/css/application.css">
+		<script src="https://d3js.org/d3.v4.min.js"></script>
+		<!-- <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script> -->
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular-route.min.js" defer="defer"></script>
+	</head>
+	<body ng-app="InsightEngine" ng-controller="PageCtrl as mc">
+		<header id="fixed-header" role="banner" class="ani">
+			<section class="contain">
+				<nav role="navigation">
+					<figure>
+						<a href="/traffic_bytes" ng-click="mc.goTo('traffic_bytes')"><img src="./assets/img/logo.png" width="300" class="logo ani">
+						<span class="sub-title ani">Coding Challenge</span></a>
+					</figure>
+					<ul class="nav-items">
+						<li ng-repeat="nav in mc.config track by nav.type" ng-if="nav.type !== 'home'" ng-class="{active: nav.label == mc.page.label}">
+							<a href="/{{nav.type}}" ng-click="mc.goTo(nav.type)">{{ nav.label }}</a>
+						</li>
+					</ul>
+				</nav>
+			</section>
+		</header>
+		<section id="content" class="contain">
+		  <article class="page-body" ng-view></article>
+		</section>
+		<script>
+			const templateBase = './assets/views/';
 
-    <!-- social media tags -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:site" content="@geektasking">
-    <meta name="twitter:title" content="Matchly">
-    <meta name="twitter:description" content="AngularJs based matching game.">
-    <meta name="twitter:creator" content="@geektasking">
-    <meta name="twitter:image:src" content="https://pbs.twimg.com/profile_images/657492259/square-logo-glasses-only.png">
-    <meta property="og:title" content="Matchly" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://github.com/belikemike/Matchly" />
-    <meta property="og:image" content="https://pbs.twimg.com/profile_images/657492259/square-logo-glasses-only.png" />
-    <meta property="og:description" content="AngularJs based matching game.">
+		 	const config = {
+				home: {
+					type: 'home',
+					label: 'Welcome',
+					framework: {
+						templateUrl: `${templateBase}home.htm`
+					},
+				},
+				traffic_bytes: {
+					type: 'traffic_bytes',
+					label: 'Traffic and Bytes',
+					framework: {
+						template: '<traffic-view class="view-container"></traffic-view>'
+					}
+				},
+				time: {
+					type: 'time',
+					label: 'Time',
+					framework: {
+						template: '<time-view class="view-container"></time-view>'
+					}
+				}
+				// ,followed_by: {
+				// 	type: 'followed_by',
+				// 	label: 'Login Attempts',
+				// 	framework: {
+				// 		templateUrl: `${templateBase}followed_by.htm`
+				// 	}
+				// }
+			};
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+			class Data {
+				constructor($http) {
+					this.$http = $http;
+				}
+				async getData(type) {
+					const results = await this.$http.get(`./data/${type}.json`);
+					return results;
+				}
+			}
 
-    <!-- CDN -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" type="text/css">
-    <link href="./assets/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Rubik:700italic|Ubuntu" rel="stylesheet" type="text/css">
-    <link href="./assets/css/application.css" rel="stylesheet" type="text/css">
+		  const PageCtrlCfg = {};
 
-  </head>
-  <body id="body" ng-app="matchly">
-    <gt-component></gt-component>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
-    <script src="./assets/js/application.js"></script>
-    <script src="./assets/js/shared/PlayService/PlayService.js"></script>
-    <script src="./assets/js/Ui/Component/Component.js"></script>
-    <script src="./assets/js/Ui/Component/Header/Header.js"></script>
-    <script src="./assets/js/Ui/Component/Body/Body.js"></script>
-  </body>
+		  class Navigation {
+		  	constructor($location) {
+		  		this.$location = $location;
+		  	}
+		  	currentSection() {
+		  		let section = this.$location.url().substring(1);
+		  		return !section ? 'home' : section;
+		  	}
+		  }
+
+		  class PageCtrl {
+		  	constructor(Data, Navigation) {
+		  		this.config = config;
+  				PageCtrlCfg.Data = Data;
+		  		PageCtrlCfg.Navigation = Navigation;
+		  	}
+		  	$onInit() {
+		  		this.page = this.config[PageCtrlCfg.Navigation.currentSection()];
+		  	}
+		  	goTo(type) {
+		  		this.page = this.config[type];
+		  	}
+		  }
+
+		  class BaseView {
+		  	constructor($window) {
+		  		this.$window = $window;
+		  		this.$window.addEventListener('resize', debounce(this.resize, 400).bind(this));
+		  	}
+		  	resize(evt) {
+	  			this.buildChart(this.dataPage());
+	  		}
+		  	changePageSize(dir) {
+		  		const count = this.pageTotal + dir;
+		  		if (count > 0 && count < this.collection.length) {
+		  			this.pageTotal = count;
+		  			this.totalPages = Math.floor(this.collection.length/this.pageTotal);
+		  			this.buildChart(this.dataPage());
+		  		}
+		  	}
+		  	$onDelete() {
+		  		this.$window.removeEventListener('resize');
+		  	}
+		  	dataPage() {
+		  		let col = [];
+		  		if (!isNaN(this.pageStart())) {
+		  			const pageStart = this.pageStart();
+		  			col = this.collection.slice(pageStart, this.pageTotal + pageStart);
+		  		} else {
+		  			col = this.collection
+		  		}
+		  		return col;
+		  	}
+		  	pageStart() {
+		  		return this.currentPage * this.pageTotal;
+		  	}
+		  	page(dir) {
+		  		this.currentPage+= dir;
+		  		const lastPage = this.totalPages;
+		  		if (this.currentPage < 0) {
+		  			this.currentPage = lastPage;
+		  		} else if (this.currentPage > lastPage) {
+		  			this.currentPage = 0;
+		  		}
+		  		this.buildChart(this.dataPage());
+		  	}
+		  }
+
+		  class TrafficView extends BaseView {
+		  	constructor(Data, Navigation, $scope, Graphs, $window) {
+		  		super($window);
+		  		this.config = config;
+		  		this.$scope = $scope;
+  				this.Data = Data;
+		  		this.Navigation = Navigation;
+
+		  		this.Graphs = Graphs
+		  		this.currentPage = 1;
+		  		this.pageTotal = 300;
+		  		this.isLoading = true;
+		  		this.currentSection = Navigation.currentSection();
+		  		this.totalSumBytes = 0;
+		  	}
+		  	$onInit() {
+		  		const set = {};
+		  		this.Data.getData(this.currentSection)
+		  		.then(({ data }) => {
+						this.collection = this.collate(data, 'count', 'asc');
+						this.totalPages = Math.floor(this.collection.length/this.pageTotal);
+						this.isLoading = false;
+						this.$scope.$evalAsync();
+						return this.buildChart(this.dataPage());
+	  			});
+		  	}
+		  	buildChart(data) {
+		      const config = {
+		      	margin: { left: 10, top: 10, right: 10, bottom: 10},
+		      	height: 425,
+		      	width: 625,
+    				selector: '#chart',
+    				xData: 'source',
+    				yData: 'sum_bytes'
+    			};
+			    new this.Graphs.Bubble(config).render(data);
+		  	}
+		  	collate(data, type, sort = false) {
+		  		const sourceMap = {};
+		  		const results = [];
+		  		data.map(item => {
+					  const source = item.result['All_Traffic.src'];
+					  const target = item.result['All_Traffic.dest'];
+					  const value = +item.result.sum_bytes;
+					  if (!sourceMap[source]) {
+					    sourceMap[source] = {
+					      source: source, total: 0, count: 0, targets: []
+					    }
+					  }
+					  sourceMap[source].total+= value;
+					  sourceMap[source].count++;
+					  sourceMap[source].targets.push({ ip: target, sum_bytes: value });
+					});
+
+		  		for (let s in sourceMap) {
+					  results.push(sourceMap[s]);
+					}
+
+					if (sort && type) {
+						if (sort === 'asc') {
+							results.sort((a,b) => a[type] > b[type] ? 1:-1)
+						} else if (sort === 'desc') {
+							results.sort((a,b) => a[type] < b[type] ? 1:-1)
+						}
+					}
+					return results;
+		  	}
+		  }
+
+		  class TimeView extends BaseView {
+		  	constructor(Data, Navigation, $scope, $window, Graphs) {
+		  		super($window);
+		  		this.config = config;
+		  		this.$scope = $scope;
+  				this.Data = Data;
+		  		this.Navigation = Navigation;
+		  		this.Graphs = Graphs
+		  		this.isLoading = true;
+		  		this.currentSection = Navigation.currentSection();
+		  		this.totalSumBytes = 0;
+		  	}
+		  	$onInit() {
+		  		const set = {};
+		  		this.Data.getData(this.currentSection)
+		  		.then(({ data }) => {
+						this.collection = this.collate(data, 'count', 'asc');
+						this.isLoading = false;
+						this.$scope.$evalAsync();
+						return this.buildChart(this.dataPage());
+	  			});
+		  	}
+		  	buildChart(data) {
+		      const config = {
+		      	margin: { left: 50, top: 50, right: 20, bottom: 50},
+		      	height: 325,
+		      	width: 600,
+    				selector: '#chart',
+    				xData: 'source',
+    				yData: 'sum_bytes'
+    			};
+			    new this.Graphs.Line(config).render(data);
+		  	}
+		  	collate(data) {
+		  		const output = [];
+		  		data.forEach(d => {
+				    const result = d.result;
+				    const timeFormat = d3.timeFormat('%I:%M').parse;
+				    const time = result._time;
+				    const set = {};
+				    delete result._time;
+				    for (let key in result) {
+				      output.push({
+				        group: key,
+				        yProp: +result[key],
+				        xProp: new Date(time)
+				      });
+				    }
+				  });
+				  output.sort((a,b) => a.xProp > b.xProp ? 1 : -1)
+				  return output;
+		  	}
+		  }
+
+		  angular.module("InsightEngine", ['ngRoute'])
+		  // Services
+		  .service('Navigation', Navigation)
+		  .service('Data', Data)
+		  // Controllers
+		  .controller('PageCtrl', PageCtrl)
+		  // Components
+		  .component('loading', {
+		  	bindings: {
+		  		active: '<'
+		  	},
+		  	controllerAs: 'loading',
+		  	templateUrl: `${templateBase}loading.htm`
+		  })
+		  .component('sharedHeader', {
+		  	bindings: {
+		  		parent: '<'
+		  	},
+		  	controllerAs: 'sh',
+		  	templateUrl: `${templateBase}sharedHeader.htm`
+		  })
+		  .component('trafficView', {
+		  	controller: TrafficView,
+		  	controllerAs: 'vm',
+		  	templateUrl: `${templateBase}page-view.htm`
+		  })
+		  .component('timeView', {
+		  	controller: TimeView,
+		  	controllerAs: 'vm',
+		  	templateUrl: `${templateBase}page-view.htm`
+		  })
+		  .config(($routeProvider, $locationProvider) => {
+		  	for (let item in config) {
+		  		let path = '/' + (item !== 'home' ? item:'');
+		  		$routeProvider.when(path,config[item].framework);
+		  	}
+		  	$routeProvider.otherwise({
+        	redirect: '/traffic_bytes'
+    		});
+		  	$locationProvider.html5Mode(true);
+		  	$locationProvider.hashPrefix('!');
+			});
+
+			function debounce(func, wait, immediate) {
+				let timeout;
+				return function() {
+					const context = this, args = arguments;
+					const later = () => {
+						timeout = null;
+						if (!immediate) func.apply(context, args);
+					};
+					const callNow = immediate && !timeout;
+					clearTimeout(timeout);
+					timeout = setTimeout(later, wait);
+					if (callNow) func.apply(context, args);
+				};
+			}
+			</script>
+			<!-- local files -->
+		<script type="text/javascript" src="./assets/js/Graphs.js"></script>
+	</body>
 </html>
