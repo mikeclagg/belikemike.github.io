@@ -9,11 +9,17 @@
     <script type="text/javascript" src="jasmine/jasmine-html.js"></script>
     <script type="text/javascript" src="jasmine/boot.js"></script>
     <style>
+      .jasmine_html-reporter {
+        width: 50%;
+        margin: 20px auto;
+      }
+      .ani {
+        transition: all 0.5s ease-out;
+      }
       body {
         color: #111;
         background-color: #eee;
         font-family: Verdana;
-        font-size: 20pt;
       }
       #board {
         width: 300px;
@@ -30,7 +36,7 @@
         height: 100px;
         text-align: center;
         flex: 1 0 0;
-        font-size: 3em;
+        font-size: 5em;
         border-right: 2px solid #111;
         cursor: pointer;
       }
@@ -40,9 +46,8 @@
       }
       #results {
         text-align: center;
-        height: 50px;
-        padding-top: 20px;
-        margin: 0;
+        margin: 0 0 20px 0;
+        font-size: 2.5em;
       }
       .btn {
         padding: 5px 15px;
@@ -60,7 +65,7 @@
         cursor: pointer;
       }
       .btn-primary:hover {
-        background: rgba(20, 92, 156, 1);
+        background: rgba(50, 50, 50, 1);
       }
       .btn-primary:active {
         opacity: 0.8;
@@ -69,13 +74,26 @@
       .cell:last-of-type {
         border: none;
       }
+      @media screen and (max-width: 500px) and (min-width: 0px) {
+        .cell {
+          font-size: 3.5em;
+          height: 70px;
+        }
+        .jasmine_html-reporter {
+          width: 100%;
+          margin: 20px auto;
+        }
+        #results {
+          font-size: 1.5em;
+        }
+      }
     </style>
   </head>
   <body>
-    <section id="board">
-      <header id="header">
-       <h4 id="results"></h4>
-      </header>
+    <header id="header">
+     <h4 id="results" class="ani"></h4>
+    </header>
+    <section id="board" class="ani">
       <section id="game"></section>
       <footer id="footer">
         <button type="reset" id="reset" class="btn btn-primary">New Game</button>
@@ -97,7 +115,7 @@
               row.className = this.row.substring(1);
               for (let j = 0; j < y; j++) {
                 const cell = doc.createElement('li');
-                cell.className = this.cell.substring(1);
+                cell.className = `${this.cell.substring(1)} ani`;
                 cell.dataset.posY = j;
                 cell.dataset.posX = i;
                 row.append(cell);
@@ -214,9 +232,13 @@
               expect(dom(game.board.row).length).toEqual(3);
             });
 
-            it('Board has 9 cells', () => {
+            it('Board has 9 cells (3x3 grid)', () => {
               expect(dom(ttt.board.cell).length)
               .toEqual(game.board.grid[0] * game.board.grid[1]);
+            });
+
+            it('Starts with a blank board', () => {
+              resetBoard();
             });
           });
           describe('Game Spec', () => {
@@ -227,10 +249,6 @@
             });
 
             it('Starts with X', () => {
-              resetBoard();
-            });
-
-            it('Starts with a blank board', () => {
               resetBoard();
             });
 

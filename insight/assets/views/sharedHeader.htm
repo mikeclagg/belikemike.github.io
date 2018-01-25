@@ -1,0 +1,10 @@
+<header class="page-title" style="display:flex;flex-direction: row;">
+  <h3>{{ sh.parent.config[sh.parent.currentSection].label }}</h1>
+  <h5 class="page-sub-title" ng-if="sh.parent.totalPages">Page {{ sh.parent.currentPage }} of {{ sh.parent.totalPages }}</h3>
+</header><!-- /header -->
+<div style="text-align: right;" ng-if="sh.parent.totalPages">
+  <button type="button" class="btn btn-light btn-sm" ng-click="sh.parent.changePageSize(-10)">-</button>
+  {{ sh.parent.pageTotal }} per page
+  <button type="button" class="btn btn-light btn-sm" ng-click="sh.parent.changePageSize(10)">+</button>
+</div>
+<loading class="loading-container" active="sh.parent.isLoading"></loading>

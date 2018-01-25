@@ -2,9 +2,8 @@
   'use strict';
   var app, selected, rules, _cmpnt, vm;
       selected = [];
-      app = angular.module('matchly', []);
-
-      app.directive('gameboard', function ($rootScope, Gameboard, PlayService) {
+      angular.module('matchly', [])
+        .directive('gameboard', function ($rootScope, Gameboard, PlayService) {
           return {
             restrict: 'E',
             templateUrl: './app/views/partials/gameboard.htm',
@@ -13,9 +12,8 @@
               $scope.PlayService = PlayService;
             }
           };
-        }
-      )
-      .directive('gamepiece', function ($timeout, PlayService, Gameboard) {
+        })
+        .directive('gamepiece', function ($timeout, PlayService, Gameboard) {
           var prefix = 'cell-';
           return {
             restrict: 'EA',
@@ -30,7 +28,7 @@
                   if (PlayService.playing) {
                     if (current > -1) {
                       element.children().children().removeClass('out');
-                      if (!document.querySelectorAll('.cell.active.out').length) {
+                      if (!document.querySelectorAll('.active .cell.out').length) {
                         angular.element(document.querySelectorAll('.cell')).addClass('disabled');
                         PlayService.winner = true;
                         PlayService.playing = false;

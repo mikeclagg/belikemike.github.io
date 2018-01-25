@@ -2,6 +2,7 @@
   class Gameboard {
     constructor() {
       this.separator = '__';
+      this.selected = [];
     }
     render(level) {
       var col, i, row, grid;
@@ -47,7 +48,6 @@
     }
   }
 
-  let gameboard, scope;
   const defaults = {
     timer: 0,
     playing: false,
@@ -59,37 +59,42 @@
   };
 
   class PlayService {
-    constructor(Gameboard, $interval, $timeout) {
-      gameboard = Gameboard;
-      Object.assign(this, defaults);
+    constructor(Gameboard, $interval) {
+      this.selector = 'active';
+      Object.assign(this, defaults, { Gameboard, $interval });
       this.currentLevel = this.levels[0];
       this.changeLevel();
-      this.$interval = $interval;
-      this.$timeout = $timeout;
     }
     reset() {
-      Object.keys.forEach(k => delete this[k]);
-    }
-    changeLevel() {
       this.playing = false;
       this.winner = false;
+      this.toggleHighlight(this.selector, 'removeClass', this.selector);
+      this.intID && interval.cancel(self.intID);
       this.timer = this.currentLevel.timeLimit;
-      gameboard.render(this.currentLevel);
+    }
+    toggleHighlight(selector, method, className) {
+      this.Gameboard.selected.forEach(k => {
+        const domSelect = selector ? '.' + selector : '#cell-' + k;
+        const activeSquares = document.querySelectorAll(domSelect);
+        ng.element(activeSquares)[method](className);
+      });
+    }
+    changeLevel() {
+      this.reset();
+      this.timer = this.currentLevel.timeLimit;
+      this.Gameboard.render(this.currentLevel);
     }
     play() {
+      this.reset();
+      this.toggleHighlight(false, 'addClass', 'active');
       this.playing = true;
-      this.intID && this.$interval.cancel(self.intID);
-      this.timer = this.currentLevel.timeLimit;
       this.countdown(this.currentLevel.timeLimit);
-      gameboard.selected.forEach(k => {
-        const el = angular.element(document.querySelector(`#cell-${k}`));
-        el.addClass('active');
-      });
     }
     countdown(timeLimit) {
       const self = this;
       const base = Date.now();
-      this.intID = self.$interval(function () {
+
+      this.intID = self.$interval(() => {
         var delta;
             delta = Math.floor(Date.now() - base) / 1000;
 
@@ -97,7 +102,8 @@
         if (delta > timeLimit) {
           self.playing = true;
           self.$interval.cancel(self.intID);
-          ng.element(document.querySelectorAll('.cell.active')).addClass('out');
+          const activeSquares = document.querySelectorAll('.'+this.selector+' .cell');
+          ng.element(activeSquares).addClass('out');
         }
       }, 800);
     }

@@ -1,0 +1,39 @@
+body {
+  background: #333;
+  font-family: 'Anton', sans-serif;
+}
+header {
+  font-family: 'Sedgwick Ave', cursive;
+}
+#header,
+.sub-header {
+  color: #eee;
+}
+#header {
+  width: 345px;
+  margin: auto;
+}
+#header h1 {
+  text-align: center;
+  margin-top: 20%;
+  font-size: 5em;
+}
+.sub-header {
+  margin-top: -10px;
+  font-size: 2em;
+  background: #369;
+  padding: 5px 0 5px 5px;
+  font-family: 'Anton', sans-serif;
+}
+.links {
+  font-size: 1.5em;
+  font-family: 'Anton', sans-serif;
+  margin: 10px 0 0 0;
+  text-align: right;
+}
+a,
+a:hover,
+a:active {
+  color: #eee;
+  text-decoration: none;
+}
