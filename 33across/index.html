@@ -1,0 +1,274 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="theme-color" content="#333333">
+    <title>33Across Coding Challenge</title>
+    <link rel="shortcut icon" type="image/png" href="jasmine/jasmine_favicon.png">
+    <link rel="stylesheet" type="text/css" href="jasmine/jasmine.css">
+    <script type="text/javascript" src="jasmine/jasmine.js"></script>
+    <script type="text/javascript" src="jasmine/jasmine-html.js"></script>
+    <script type="text/javascript" src="jasmine/boot.js"></script>
+    <style>
+      body {
+        color: #111;
+        background-color: #eee;
+        font-family: Verdana;
+        font-size: 20pt;
+      }
+      #board {
+        width: 300px;
+        margin: auto;
+        padding: 0;
+      }
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      .cell {
+        width: 100px;
+        height: 100px;
+        text-align: center;
+        flex: 1 0 0;
+        font-size: 3em;
+        border-right: 2px solid #111;
+        cursor: pointer;
+      }
+      .row {
+        border-bottom: 2px solid #111;
+        display: flex;
+      }
+      #results {
+        text-align: center;
+        height: 50px;
+        padding-top: 20px;
+        margin: 0;
+      }
+      .btn {
+        padding: 5px 15px;
+        border: none;
+        border-radius: 5px;
+      }
+      #footer {
+        padding: 20px;
+        text-align: center;
+      }
+      .btn-primary {
+        background: rgba(33, 151, 155, 1);
+        color: #fff;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .btn-primary:hover {
+        background: rgba(20, 92, 156, 1);
+      }
+      .btn-primary:active {
+        opacity: 0.8;
+      }
+      .row:last-of-type,
+      .cell:last-of-type {
+        border: none;
+      }
+    </style>
+  </head>
+  <body>
+    <section id="board">
+      <header id="header">
+       <h4 id="results"></h4>
+      </header>
+      <section id="game"></section>
+      <footer id="footer">
+        <button type="reset" id="reset" class="btn btn-primary">New Game</button>
+      </footer>
+    </section>
+    <script type="text/javascript">
+      (function (win, doc) {
+        const dom = doc.querySelectorAll.bind(doc);
+        class Board {
+          constructor(config) {
+            Object.assign(this, config);
+            return this.draw();
+          }
+          draw() {
+            const [ x, y ] = this.grid;
+            const [ game ] = dom('#game');
+            for (let i = 0; i < x; i++) {
+              const row = doc.createElement('ul');
+              row.className = this.row.substring(1);
+              for (let j = 0; j < y; j++) {
+                const cell = doc.createElement('li');
+                cell.className = this.cell.substring(1);
+                cell.dataset.posY = j;
+                cell.dataset.posX = i;
+                row.append(cell);
+              }
+              game.append(row);
+            }
+            [ this.results ] = dom('#results');
+            [ this.resetBtn ] = dom('#reset');
+            this.cells = Array.from(dom(this.cell));
+          }
+          reset() {
+            this.cells.forEach(cell => (cell.innerText = ''));
+            this.results.innerText = '';
+          }
+        }
+        class Game {
+          constructor(config) {
+            this.config = config;
+            Object.assign(this, config);
+            this.board = new Board(this.config.board);
+            this.playing = true;
+            this.reset();
+            this.board.resetBtn.addEventListener('click', this.reset.bind(this));
+          }
+          changePlayer() {
+            this.players.shift();
+            this.players.splice(this.players.length, 0, this.currentPlayer);
+            this.currentPlayer = this.players[0];
+            return this.currentPlayer;
+          }
+          display() {
+            this.board.results.innerText = `${this.currentPlayer.name}'s (${this.currentPlayer.piece}) Turn`;
+          }
+          reset() {
+            this.players = this.config.players.concat();
+            this.currentPlayer = this.players[0];
+            this.board.reset();
+            this.display();
+          }
+          gameOver() {
+            let isOver = true;
+            this.board.cells.forEach(cell => {
+              if (cell.innerText==='') {
+                isOver = false;
+              }
+            });
+            return isOver;
+          }
+        }
+        class TicTacToe extends Game {
+          constructor(config) {
+            super(config);
+            this.configure();
+          }
+          configure() {
+            const regexp = new RegExp(this.board.cell.substring(1));
+            [ this.boardHtml ] = dom('#board');
+            this.boardHtml.addEventListener('click', ({target}) => {
+              if (regexp.test(target.className)) {
+                this.play(target);
+              }
+            });
+          }
+          play(cell) {
+            if (!cell.innerText) {
+              cell.innerText = this.currentPlayer.piece;
+              this.changePlayer();
+              this.display();
+            }
+            if (this.gameOver()) {
+              this.board.results.innerText = `Game Over`;
+            }
+          }
+        }
+
+        const ttt = {
+          board: {
+            width: '100',
+            height: '100',
+            cell: '.cell',
+            row: '.row',
+            grid: [3, 3]
+          },
+          minPlayers: 1,
+          maxPlayers: 2,
+          players: [
+            { name: 'Player 1', piece: 'X' },
+            { name: 'Player 2', piece: 'O' }
+          ]
+        };
+
+        // Instantiate new Game()
+        const game = new TicTacToe(ttt);
+
+        /*
+          Jasmine Specs
+         */
+        describe('Tic Tac Toe', () => {
+          const clickAllTheSquares = () => {
+            game.board.cells.forEach(cell => cell.click());
+          };
+
+          const resetBoard = () => {
+            game.board.resetBtn.click();
+            expect(game.currentPlayer.piece).toEqual('X');
+            game.board.cells.forEach(cell => {
+              expect(cell.innerText).toEqual('');
+            });
+          };
+
+          describe('Board Spec', () => {
+
+            it('Board has 3 columns', () => {
+              expect(dom(game.board.row).length).toEqual(3);
+            });
+
+            it('Board has 9 cells', () => {
+              expect(dom(ttt.board.cell).length)
+              .toEqual(game.board.grid[0] * game.board.grid[1]);
+            });
+          });
+          describe('Game Spec', () => {
+
+            afterEach(() => {
+              // reset the game for each test
+              game.reset();
+            });
+
+            it('Starts with X', () => {
+              resetBoard();
+            });
+
+            it('Starts with a blank board', () => {
+              resetBoard();
+            });
+
+            it('Alternates players', () => {
+              expect(game.currentPlayer.piece).toEqual('X');
+              game.changePlayer();
+              expect(game.currentPlayer.piece).toEqual('O');
+              game.changePlayer();
+              expect(game.currentPlayer.piece).toEqual('X');
+            });
+
+            it('Clicks on middle square to start the game', () => {
+              const value = game.currentPlayer.piece;
+              const [ square ] = dom('.row:nth-child(2) .cell:nth-child(2)');
+              square.click();
+              expect(square.innerText).toEqual('X');
+            });
+
+            it('Game ends when all cells are clicked', () => {
+              clickAllTheSquares();
+              expect(game.board.results.innerText).toEqual('Game Over');
+            });
+
+            it('Click "New Game" resets the board after the game ends', () => {
+              clickAllTheSquares();
+              resetBoard();
+            });
+
+            it('Plays 3 rounds and starts a new game', () => {
+              for (let i = 0; i < 3; i++) {
+                game.board.cells[i].click();
+              }
+              resetBoard();
+            });
+
+          });
+        });
+      }(window, document))
+    </script>
+  </body>
+</html>
