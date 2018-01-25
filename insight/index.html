@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<base href="/">
+		<base href="./">
 		<title>Interview Sandbox</title>
 		<meta name="fragment" content="!">
 		<link href="https://fonts.googleapis.com/css?family=Rock+Salt" rel="stylesheet">
@@ -16,12 +16,12 @@
 			<section class="contain">
 				<nav role="navigation">
 					<figure>
-						<a href="/traffic_bytes" ng-click="mc.goTo('traffic_bytes')"><img src="./assets/img/logo.png" width="300" class="logo ani">
+						<a href="./traffic_bytes" ng-click="mc.goTo('traffic_bytes')"><img src="./assets/img/logo.png" width="300" class="logo ani">
 						<span class="sub-title ani">Coding Challenge</span></a>
 					</figure>
 					<ul class="nav-items">
 						<li ng-repeat="nav in mc.config track by nav.type" ng-if="nav.type !== 'home'" ng-class="{active: nav.label == mc.page.label}">
-							<a href="/{{nav.type}}" ng-click="mc.goTo(nav.type)">{{ nav.label }}</a>
+							<a href="./{{nav.type}}" ng-click="mc.goTo(nav.type)">{{ nav.label }}</a>
 						</li>
 					</ul>
 				</nav>
