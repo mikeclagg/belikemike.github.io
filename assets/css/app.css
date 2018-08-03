@@ -1,6 +1,7 @@
 body {
   background: #333;
   font-family: 'Anton', sans-serif;
+  text-shadow: 3px 7px 2px rgba(0,0,0,0.7);
 }
 header {
   font-family: 'Sedgwick Ave', cursive;
