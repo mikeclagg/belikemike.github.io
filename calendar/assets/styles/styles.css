@@ -1,0 +1,144 @@
+body, h1, h2, h3, h4, h5, ul, li, section, div {
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+ul {
+  list-style-type: none;
+}
+
+body {
+  font: normal 20px verdana, sans-serif;
+  color: #333;
+}
+
+.row {
+  width: 100%;
+}
+.row li {
+  float: left;
+}
+
+#weekdays {
+  margin: 0;
+  padding: 5px 0;
+  background-color: #ddd;
+  text-transform: capitalize;
+}
+
+.days li {
+  display: inline-block;
+  width: calc(100% / 7);
+  color: #666;
+  text-align: center;
+  height: 100%;
+}
+
+
+.week li {
+  border: thin solid #333;
+  border-right: none;
+  height: calc(100vh / 6);
+  border-top: none;
+  text-align: right;
+  padding: 3px 7px 0 0;
+  cursor: pointer;
+}
+.week li:nth-child(7n) {
+  border-right: thin solid #333;
+}
+.week li:nth-child(7n) {
+  border-right: thin solid #333;
+}
+.week li:last-child {
+  border-right: thin solid #333;
+  width: calc(100% / 7 + 1px);
+}
+
+.week li:hover {
+  background: rgba(255, 255, 0, 0.2);
+}
+
+.container {
+  width: 100vw;
+  text-align: center;
+}
+
+#component-header-content {
+  margin: 5px;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+#component-header {
+  text-align: center;
+  background: #369;
+  height: 50px;
+  display: flex;
+  color: #fff;
+  text-shadow: 1px 2px 4px rgba(0,0,0,0.6);
+}
+
+#component-header * {
+  flex: 1;
+}
+
+.icon {
+  padding: 0;
+  margin: -5px;
+  font-size: 44px;
+  cursor: pointer;
+}
+
+.left-chevron:before {
+  content: "\2039";
+}
+
+.right-chevron:before {
+  content: "\203A";
+}
+
+.footer {
+
+}
+
+.clearfix {
+  overflow: auto;
+}
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+#app-footer {
+  width: 80%;
+  margin: auto;
+}
+#app-footer > figure {
+  float: left;
+  width: 40px;
+  height: 22px;
+  border: thin solid #aaa;
+  cursor: pointer;
+}
+#app-footer > figure.active {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+#app-footer img {
+  width: 38px;
+  height: 20px;
+}
+.dual-images {
+  position: relative;
+  overflow: hidden;
+}
+.dual-images img {
+  position: absolute;
+}
+.dual-images img:last-child {
+  left: 19px;
+}

@@ -1,0 +1,23 @@
+{
+  "name": "belikemike.github.io",
+  "version": "1.0.0",
+  "description": "GitHub Account Page",
+  "main": "index.js",
+  "scripts": {
+    "start": "lite-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/belikemike/belikemike.github.io.git"
+  },
+  "author": "Mike Clagg",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/belikemike/belikemike.github.io/issues"
+  },
+  "homepage": "https://github.com/belikemike/belikemike.github.io#readme",
+  "devDependencies": {
+    "lite-server": "^2.4.0"
+  }
+}

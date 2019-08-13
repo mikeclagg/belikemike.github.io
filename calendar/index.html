@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Calendar Component</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="assets/styles/styles.css">
+  </head>
+  <body>
+    <section>
+      <header id="component-header">
+        <figure class="icon left-chevron" id="calendar-previous"></figure>
+        <h3 id="component-header-content"></h3>
+        <figure class="icon right-chevron" id="calendar-next"></figure>
+      </header>
+      <article id="weekdays" class="row days clearfix"></article>
+      <article id="month" class="row week days clearfix"></article>
+    </section>
+    <footer id="app-footer" class="clearfix">
+      <figure class="dual-images active">
+        <img src="assets/img/flags/us.png">
+        <img src="assets/img/flags/gb.png" data-locale="en">
+      </figure>
+      <figure>
+        <img src="assets/img/flags/fr.png" data-locale="fr">
+      </figure>
+      <figure>
+        <img src="assets/img/flags/jp.png" data-locale="ja">
+      </figure>
+      <figure>
+        <img src="assets/img/flags/kr.png" data-locale="ko-KR">
+      </figure>
+      <figure class="dual-images">
+        <img src="assets/img/flags/mx.png" data-locale="es">
+        <img src="assets/img/flags/es.png" data-locale="es">
+      </figure>
+    </footer>
+    <script src="assets/scripts/application.js"></script>
+  </body>
+</html>
