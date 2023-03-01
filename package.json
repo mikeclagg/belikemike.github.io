@@ -18,6 +18,6 @@
   },
   "homepage": "https://github.com/belikemike/belikemike.github.io#readme",
   "devDependencies": {
-    "lite-server": "^2.4.0"
+    "lite-server": "^2.6.1"
   }
 }
